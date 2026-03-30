@@ -1,0 +1,83 @@
+name: Update Homebrew Formula
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  update-formula:
+    name: Update Homebrew tap
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Get release info from PyPI
+        id: pypi
+        run: |
+          sleep 30  # wait for PyPI to index the new version
+          VERSION="${GITHUB_REF_NAME#v}"
+          python3 -c "
+          import urllib.request, json
+          data = json.loads(urllib.request.urlopen('https://pypi.org/pypi/garmin-givemydata/${VERSION}/json').read())
+          for u in data['urls']:
+              if u['filename'].endswith('.tar.gz'):
+                  print('url=' + u['url'])
+                  print('sha256=' + u['digests']['sha256'])
+                  break
+          " >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Clone homebrew-tap
+        run: |
+          git clone https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/nrvim/homebrew-tap.git
+          cd homebrew-tap
+
+      - name: Update formula
+        run: |
+          cd homebrew-tap
+          cat > Formula/garmin-givemydata.rb << 'FORMULA'
+          class GarminGivemydata < Formula
+            include Language::Python::Virtualenv
+
+            desc "Get your Garmin Connect data back — 47-table SQLite + MCP server"
+            homepage "https://github.com/nrvim/garmin-givemydata"
+            url "${{ steps.pypi.outputs.url }}"
+            sha256 "${{ steps.pypi.outputs.sha256 }}"
+            license "AGPL-3.0-only"
+
+            depends_on "python@3.12"
+
+            def install
+              virtualenv_install_with_resources
+            end
+
+            def caveats
+              <<~EOS
+                To complete setup, install the browser driver:
+                  playwright install chromium
+
+                Then run:
+                  garmin-givemydata
+              EOS
+            end
+
+            test do
+              system "#{bin}/garmin-givemydata", "--help"
+            end
+          end
+          FORMULA
+
+      - name: Commit and push
+        run: |
+          cd homebrew-tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/garmin-givemydata.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "bump: garmin-givemydata v${{ steps.pypi.outputs.version }}"
+          git push

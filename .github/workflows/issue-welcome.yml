@@ -1,0 +1,68 @@
+name: Issue Welcome
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  welcome:
+    name: Welcome new issue
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const author = issue.user.login;
+            const labels = issue.labels.map(l => l.name);
+            const body = issue.body || '';
+
+            // Don't respond to bot issues (Dependabot, etc.)
+            if (author.includes('[bot]') || author === 'dependabot') return;
+
+            let response = `Thanks for opening this issue, @${author}!\n\n`;
+
+            // Check if it's a bug report with enough detail
+            const hasPlatform = /macos|linux|windows|ubuntu|debian/i.test(body);
+            const hasPython = /python|3\.\d+/i.test(body);
+            const hasError = /error|traceback|failed|crash/i.test(body);
+            const hasSteps = body.length > 200;
+
+            if (hasError && !hasSteps) {
+              response += `To help us investigate, could you provide:\n\n`;
+              response += `- **Platform**: macOS / Linux / Windows\n`;
+              response += `- **Python version**: \`python3 --version\`\n`;
+              response += `- **Install method**: brew / pip / git clone\n`;
+              response += `- **garmin-givemydata version**: \`garmin-givemydata --status\` or check \`pyproject.toml\`\n`;
+              response += `- **Full error output**: paste the complete terminal output\n`;
+              response += `- **Steps to reproduce**: what commands did you run?\n\n`;
+            }
+
+            // Check if they want to contribute
+            const wantsToContribute = /fix|pr|pull request|contribute|i can|i will|i want to/i.test(body);
+            if (wantsToContribute) {
+              response += `It looks like you might want to contribute a fix — that's great! `;
+              response += `Feel free to open a PR. The main files are:\n`;
+              response += `- \`garmin_client/client.py\` — browser automation and login\n`;
+              response += `- \`garmin_client/endpoints.py\` — API endpoint definitions\n`;
+              response += `- \`garmin_mcp/db.py\` — database schema and upsert logic\n`;
+              response += `- \`garmin_mcp/server.py\` — MCP server tools\n\n`;
+            }
+
+            if (!hasError && !wantsToContribute) {
+              response += `A few questions to help us understand the request:\n\n`;
+              response += `- Are you planning to work on this yourself, or is this a feature request?\n`;
+              response += `- What's your use case — what problem would this solve for you?\n\n`;
+            }
+
+            response += `---\n*This is an automated response. A maintainer will review this soon.*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body: response,
+            });

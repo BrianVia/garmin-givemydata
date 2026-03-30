@@ -1,0 +1,28 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What would you like?
+      placeholder: Describe the feature
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use case
+      placeholder: What problem would this solve for you?
+    validations:
+      required: true
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Are you willing to work on this?
+      options:
+        - "Yes, I can submit a PR"
+        - "I can help test"
+        - "No, just a suggestion"
+    validations:
+      required: true

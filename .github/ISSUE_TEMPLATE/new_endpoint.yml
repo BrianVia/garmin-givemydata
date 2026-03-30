@@ -1,0 +1,26 @@
+name: New Garmin Endpoint
+description: Found a new Garmin API endpoint we should collect
+labels: [endpoint]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: API endpoint URL
+      placeholder: "e.g., /gc-api/wellness-service/wellness/newEndpoint"
+    validations:
+      required: true
+  - type: textarea
+    id: data
+    attributes:
+      label: Sample response
+      render: json
+      placeholder: Paste a sample JSON response (remove personal data)
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: How did you find it?
+      placeholder: "e.g., browser dev tools on connect.garmin.com, Garmin app network traffic"
+    validations:
+      required: true
