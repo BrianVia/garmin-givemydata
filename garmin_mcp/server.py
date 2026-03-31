@@ -5,6 +5,8 @@ Garmin MCP server — exposes health and activity data via FastMCP tools.
 import json
 from datetime import date, timedelta
 
+import os
+
 from mcp.server.fastmcp import FastMCP
 
 from .db import get_connection, init_db, query
@@ -432,5 +434,56 @@ def garmin_sync() -> str:
 # ---------------------------------------------------------------------------
 
 
+def _run_http():
+    """Run MCP server over HTTP with optional bearer token auth."""
+    import uvicorn
+    from mcp.server.transport_security import TransportSecuritySettings
+    from starlette.requests import Request
+    from starlette.responses import JSONResponse
+
+    mcp.settings.host = "0.0.0.0"
+    mcp.settings.port = int(os.environ.get("PORT", 8000))
+    mcp.settings.stateless_http = True
+
+    # Allow proxied requests (SWAG sends Host: localhost)
+    mcp.settings.transport_security = TransportSecuritySettings(
+        enable_dns_rebinding_protection=False,
+    )
+
+    app = mcp.streamable_http_app()
+
+    api_key = os.environ.get("MCP_API_KEY", "")
+    if not api_key:
+        print("WARNING: MCP_API_KEY not set — server is unauthenticated!", flush=True)
+
+    if api_key:
+        from starlette.middleware.base import BaseHTTPMiddleware
+
+        class BearerAuthMiddleware(BaseHTTPMiddleware):
+            async def dispatch(self, request: Request, call_next):
+                auth = request.headers.get("authorization", "")
+                if not auth.startswith("Bearer ") or auth[7:] != api_key:
+                    return JSONResponse(
+                        {"error": "Unauthorized"}, status_code=401
+                    )
+                return await call_next(request)
+
+        app.add_middleware(BearerAuthMiddleware)
+
+    config = uvicorn.Config(
+        app,
+        host=mcp.settings.host,
+        port=mcp.settings.port,
+        log_level="info",
+    )
+    server = uvicorn.Server(config)
+    import anyio
+    anyio.run(server.serve)
+
+
 def main() -> None:
-    mcp.run(transport="stdio")
+    transport = os.environ.get("MCP_TRANSPORT", "stdio")
+    if transport == "http":
+        _run_http()
+    else:
+        mcp.run(transport="stdio")
