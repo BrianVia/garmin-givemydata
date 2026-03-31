@@ -8,6 +8,8 @@
 [![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Linux%20%7C%20Windows-lightgrey.svg)]()
 [![GitHub stars](https://img.shields.io/github/stars/nrvim/garmin-givemydata?style=social)](https://github.com/nrvim/garmin-givemydata)
 
+> Forked from [nrvim/garmin-givemydata](https://github.com/nrvim/garmin-givemydata)
+
 **It's YOUR data. Take it back.**
 
 Garmin makes it nearly impossible for individuals to access their own health data programmatically. There is no public API. The official "developer program" is restricted to approved businesses only. And in March 2026, Garmin deployed aggressive Cloudflare protections that broke **every single community library** — [garth](https://github.com/matin/garth) (deprecated), [python-garminconnect](https://github.com/cyberjunky/python-garminconnect) (broken auth), and all downstream tools like Home Assistant integrations.
