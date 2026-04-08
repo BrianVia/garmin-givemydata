@@ -1,0 +1,272 @@
+:root {
+  --bg: #0f0f17;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222240;
+  --border: #2a2a45;
+  --text: #e4e4ef;
+  --text-dim: #8888a0;
+  --text-bright: #ffffff;
+  --accent: #22c55e;
+
+  --color-hr: #ef4444;
+  --color-sleep: #6366f1;
+  --color-deep: #1e3a5f;
+  --color-light: #60a5fa;
+  --color-rem: #8b5cf6;
+  --color-awake: #f59e0b;
+  --color-steps: #10b981;
+  --color-stress: #f97316;
+  --color-battery: #22c55e;
+  --color-hrv: #06b6d4;
+  --color-training: #eab308;
+  --color-weight: #ec4899;
+  --color-spo2: #14b8a6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.75rem 0;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+nav a {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+nav a:hover { color: var(--text); background: var(--bg-card); text-decoration: none; }
+nav a.active { color: var(--text-bright); background: var(--bg-card); }
+
+/* Page header */
+.page-header {
+  margin-bottom: 1.5rem;
+}
+
+.page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-bright);
+}
+
+.page-header p {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Metric cards grid */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: background 0.15s;
+}
+
+.card:hover { background: var(--bg-card-hover); }
+
+a.card-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.card-link:hover {
+  text-decoration: none;
+  border-color: var(--accent);
+}
+
+.card .label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.card .value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.2;
+}
+
+.card .unit {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-dim);
+  margin-left: 0.25rem;
+}
+
+.card .sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.375rem;
+}
+
+/* Sparkline */
+.sparkline {
+  margin-top: 0.75rem;
+}
+
+.sparkline svg {
+  width: 100%;
+  height: 40px;
+}
+
+/* Chart container */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-container h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+/* Table */
+.table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.table-wrap h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1.25rem 1.25rem 0.75rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg-card-hover); }
+
+/* Status badges */
+.badge {
+  display: inline-block;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-green { background: #22c55e22; color: #22c55e; }
+.badge-yellow { background: #eab30822; color: #eab308; }
+.badge-red { background: #ef444422; color: #ef4444; }
+.badge-blue { background: #3b82f622; color: #3b82f6; }
+
+/* Sleep bar */
+.sleep-bar {
+  display: flex;
+  height: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  gap: 1px;
+}
+
+.sleep-bar > div { transition: width 0.3s; }
+.sleep-deep { background: var(--color-deep); }
+.sleep-light { background: var(--color-light); }
+.sleep-rem { background: var(--color-rem); }
+.sleep-awake { background: var(--color-awake); }
+
+/* Loading */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  color: var(--text-dim);
+}
+
+/* Clickable rows */
+tr[style*="cursor:pointer"]:hover td {
+  background: var(--bg-card-hover);
+}
+
+tr[style*="cursor:pointer"] td:first-child::before {
+  content: "▸ ";
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  nav { gap: 0.125rem; }
+  nav a { padding: 0.375rem 0.75rem; font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+  .cards { grid-template-columns: 1fr; }
+}

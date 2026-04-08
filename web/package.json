@@ -1,0 +1,29 @@
+{
+  "name": "garmin-health-dashboard",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "dev:client": "vite client",
+    "build": "vite build client",
+    "deploy": "vite build client && wrangler deploy",
+    "db:migrate": "wrangler d1 execute garmin-health --file=migrations/0001_schema.sql",
+    "db:migrate:local": "wrangler d1 execute garmin-health --local --file=migrations/0001_schema.sql"
+  },
+  "dependencies": {
+    "hono": "^4.12.12",
+    "preact-iso": "^2.11.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260405.1",
+    "@preact/preset-vite": "^2.9.0",
+    "preact": "^10.25.0",
+    "preact-router": "^4.1.2",
+    "uplot": "^1.6.31",
+    "vite": "^6.3.0",
+    "wrangler": "^4.81.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

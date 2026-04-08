@@ -730,7 +730,7 @@ def upsert_sleep(conn: sqlite3.Connection, record: dict) -> None:
             "awake_count": dto.get("awakeSleepCount") or dto.get("awakeCount"),
             "average_spo2": dto.get("averageSpO2Value"),
             "lowest_spo2": dto.get("lowestSpO2Value"),
-            "average_hr_sleep": dto.get("averageHrSleep") or dto.get("avgSleepHR"),
+            "average_hr_sleep": dto.get("avgHeartRate") or dto.get("averageHrSleep") or dto.get("avgSleepHR"),
             "average_respiration": dto.get("averageRespirationValue"),
             "lowest_respiration": dto.get("lowestRespirationValue"),
             "highest_respiration": dto.get("highestRespirationValue"),
