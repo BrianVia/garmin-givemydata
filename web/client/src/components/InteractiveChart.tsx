@@ -125,18 +125,20 @@ export function InteractiveChart({ series, height = 100, showFill = true, childr
             position: "absolute",
             top: "4px",
             right: "8px",
-            background: "var(--bg-card)",
-            border: "1px solid var(--border)",
-            borderRadius: "8px",
+            background: "var(--bg-elevated)",
+            border: "1px solid var(--border-strong)",
+            borderRadius: "10px",
             padding: "0.5rem 0.75rem",
-            fontSize: "0.8rem",
+            fontSize: "0.75rem",
+            fontFamily: "var(--font-mono)",
             pointerEvents: "none",
             zIndex: 10,
             minWidth: "100px",
+            boxShadow: "var(--shadow-elevated)",
           }}
         >
           {series[0]!.points[hoverIdx]!.label && (
-            <div style="color:var(--text-dim);font-size:0.7rem;margin-bottom:0.25rem">
+            <div style="color:var(--text-dim);font-size:0.65rem;margin-bottom:0.25rem;font-family:var(--font-body)">
               {series[0]!.points[hoverIdx]!.label}
             </div>
           )}

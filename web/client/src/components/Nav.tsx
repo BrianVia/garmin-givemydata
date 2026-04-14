@@ -1,10 +1,10 @@
 import { useLocation } from "preact-iso";
 
 const links = [
-  { path: "/", label: "Dashboard" },
+  { path: "/", label: "Overview" },
   { path: "/sleep", label: "Sleep" },
   { path: "/heart-rate", label: "Heart Rate" },
-  { path: "/stress", label: "Stress & Battery" },
+  { path: "/stress", label: "Stress" },
   { path: "/activities", label: "Activities" },
   { path: "/training", label: "Training" },
   { path: "/trends", label: "Trends" },
